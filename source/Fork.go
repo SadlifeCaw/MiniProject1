@@ -1,7 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"sync"
+)
 
-func printFork() {
-	fmt.Println("I am a fork")
+type fork struct {
+	sync.Mutex
+	used      int
+	beingUsed int
+	id        int
 }
