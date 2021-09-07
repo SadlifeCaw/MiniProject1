@@ -1,3 +1,3 @@
-module github.com/SadlifeCaw/MiniProject1/tree/feature/initialize/source
+module diningPhilosophers
 
 go 1.17
