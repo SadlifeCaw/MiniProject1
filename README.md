@@ -1,3 +1,3 @@
 # MiniProject1
 
-goddag privjet amigo
+"go run Main.go Philosopher.go Fork.go" to run

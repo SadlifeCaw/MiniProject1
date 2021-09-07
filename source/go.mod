@@ -1,3 +1,3 @@
-module example.com/user/source
+module github.com/SadlifeCaw/MiniProject1/tree/feature/initialize/source
 
 go 1.17
