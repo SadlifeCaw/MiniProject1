@@ -1,7 +1,7 @@
 package main
 
 import (
-	//"fmt"
+	"fmt"
 	"time"
 )
 
@@ -13,17 +13,19 @@ type philosopher struct {
 }
 
 func (p philosopher) eat() {
-	for true {
+	for true {	
 		p.leftFork.Lock()
 		p.leftFork.beingUsed = 1
 		p.rightFork.Lock()
 		p.rightFork.beingUsed = 1
 		p.eating = 1
-		time.Sleep(time.Millisecond * 750)
+		time.Sleep(time.Millisecond * 400)
 		
 		p.bites++
-		p.eating = 0
 
+		time.Sleep(time.Millisecond * 400)
+
+		p.eating = 0
 		p.rightFork.Unlock()
 		p.rightFork.used++
 		p.rightFork.beingUsed = 0
@@ -31,6 +33,6 @@ func (p philosopher) eat() {
 		p.leftFork.used++
 		p.leftFork.beingUsed = 0
 
-		//fmt.Println("Philie ", p.id, " ", p.bites, " bites")
+		fmt.Println("Philie ", p.id, " has taken: ", p.bites, " bites")
 	}
 }
