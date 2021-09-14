@@ -1,32 +1,32 @@
 package main
 
 import (
-	"fmt",
+	"fmt"
 	"sync"
 )
 
-type Fork struct {
-  sync.Mutex
+type fork struct {
+	sync.Mutex
 	inUse     int
 	timesUsed int
 	in        chan (int)
 	out       chan (int)
-  id        int
+	id        int
 }
 
-func newFork(id int) *Fork {
+func newFork(id int) *fork {
 	in := make(chan int)
 	out := make(chan int)
-  id  := id;
+	id = id
 
-	f := Fork{inUse: 0, timesUsed: 0, in: in, out: out}
+	f := fork{inUse: 0, timesUsed: 0, in: in, out: out}
 
 	go readInput(&f)
 
 	return &f
 }
 
-func readInput(f *Fork) {
+func readInput(f *fork) {
 	for {
 		message := <-f.in
 
@@ -39,6 +39,8 @@ func readInput(f *Fork) {
 			f.out <- f.inUse
 		case 1:
 			f.timesUsed++
+			f.out <- f.timesUsed
+		case 2:
 			f.out <- f.timesUsed
 		default:
 			fmt.Println("Unknown")
