@@ -14,12 +14,11 @@ type fork struct {
 	id        int
 }
 
-func newFork(id int) *fork {
+func newFork(init int) *fork {
 	in := make(chan int)
 	out := make(chan int)
-	id = id
 
-	f := fork{inUse: 0, timesUsed: 0, in: in, out: out}
+	f := fork{id: init, inUse: 0, timesUsed: 0, in: in, out: out}
 
 	go readFork(&f)
 
@@ -31,13 +30,9 @@ func readFork(f *fork) {
 		message := <-f.in
 
 		switch message {
-		case -1: //set in use to true
-			f.inUse = message
+		case -1:
 			f.out <- f.inUse
-		case -2: //set in use to false
-			f.inUse = message
-			f.out <- f.inUse
-		case -3:
+		case -2:
 			f.out <- f.timesUsed
 		default:
 			fmt.Println("Unknown")

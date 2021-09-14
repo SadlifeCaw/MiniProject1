@@ -14,18 +14,27 @@ type philosopher struct {
 	out                 chan (int)
 }
 
-func (p philosopher) eat() {
-	for true {	
+func newPhil(init int, leftFork *fork, rightFork *fork) *philosopher {
+	in := make(chan int)
+	out := make(chan int)
+
+	p := philosopher{id: init, eating: 0, bites: 0, in: in, out: out, leftFork: leftFork, rightFork: rightFork}
+
+		go eat(&p)
+		go readPhilosopher(&p)
+
+	return &p
+}
+
+func eat(p *philosopher) {
+	for true {
 		p.leftFork.Lock()
-		//p.leftFork.beingUsed = 1
+		p.leftFork.inUse = 1
 		p.rightFork.Lock()
-		//p.rightFork.beingUsed = 1
+		p.rightFork.inUse = 1
 		p.eating = 1
 
 		time.Sleep(time.Millisecond * 400)
-		
-
-
 
 		p.bites++
 
@@ -33,13 +42,11 @@ func (p philosopher) eat() {
 
 		p.eating = 0
 		p.rightFork.Unlock()
-		//p.rightFork.used++
-		//p.rightFork.beingUsed = 0
+		p.rightFork.timesUsed++
+		p.rightFork.inUse = 0
 		p.leftFork.Unlock()
-		//p.leftFork.used++
-		//p.leftFork.beingUsed = 0
-
-		fmt.Println("Philie ", p.id, " has taken: ", p.bites, " bites")
+		p.leftFork.timesUsed++
+		p.leftFork.inUse = 0
 	}
 }
 
@@ -48,13 +55,9 @@ func readPhilosopher(p *philosopher) {
 		message := <-p.in
 
 		switch message {
-		case -4: //set eating to true
-			p.eating = message
+		case -1:
 			p.out <- p.eating
-		case -5: //set eating to false
-			p.eating = message
-			p.out <- p.eating
-		case -6: //how many bites so far
+		case -2:
 			p.out <- p.bites
 
 		default:
