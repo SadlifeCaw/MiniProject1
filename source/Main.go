@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 func main() {
 
@@ -20,4 +23,12 @@ func main() {
 		go phil.eat()
 	}
 	fmt.Scanln()
+	go reader()
+}
+
+func reader(){
+	time.Sleep(time.Millisecond * 5000)
+	var request string
+	fmt.Scan(&request)
+	//Implement different requests
 }
