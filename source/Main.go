@@ -6,6 +6,7 @@ import (
 )
 
 func main() {
+
 	var forks = make([]*fork, 5)
 	for j := 0; j < 5; j++ {
 		var thisfork *fork = new(fork)
