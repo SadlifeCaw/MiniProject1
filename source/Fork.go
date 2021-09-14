@@ -21,26 +21,23 @@ func newFork(id int) *fork {
 
 	f := fork{inUse: 0, timesUsed: 0, in: in, out: out}
 
-	go readInput(&f)
+	go readFork(&f)
 
 	return &f
 }
 
-func readInput(f *fork) {
+func readFork(f *fork) {
 	for {
 		message := <-f.in
 
 		switch message {
-		case 500: //set in use to true
-			f.inUse = 500
+		case -1: //set in use to true
+			f.inUse = message
 			f.out <- f.inUse
-		case 501: //set in use to false
-			f.inUse = 501
+		case -2: //set in use to false
+			f.inUse = message
 			f.out <- f.inUse
-		case 1:
-			f.timesUsed++
-			f.out <- f.timesUsed
-		case 2:
+		case -3:
 			f.out <- f.timesUsed
 		default:
 			fmt.Println("Unknown")
