@@ -1,23 +1,23 @@
 package main
 
 import (
-	"fmt"
+	"fmt",
+	"sync"
 )
 
-func printFork() {
-	fmt.Println("I am a fork")
-}
-
 type Fork struct {
+  sync.Mutex
 	inUse     int
 	timesUsed int
 	in        chan (int)
 	out       chan (int)
+  id        int
 }
 
-func newFork() *Fork {
+func newFork(id int) *Fork {
 	in := make(chan int)
 	out := make(chan int)
+  id  := id;
 
 	f := Fork{inUse: 0, timesUsed: 0, in: in, out: out}
 
