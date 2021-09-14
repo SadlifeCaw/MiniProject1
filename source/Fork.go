@@ -1,38 +1,47 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func printFork() {
 	fmt.Println("I am a fork")
 }
 
 type Fork struct {
-	inUse     bool
+	inUse     int
 	timesUsed int
-	in        chan (bool)
-	out       chan (bool)
+	in        chan (int)
+	out       chan (int)
 }
 
 func newFork() *Fork {
-	in := make(chan bool)
-	out := make(chan bool)
+	in := make(chan int)
+	out := make(chan int)
 
-	f := Fork{inUse: false, timesUsed: 1, in: in, out: out}
+	f := Fork{inUse: 0, timesUsed: 0, in: in, out: out}
+
+	go readInput(&f)
 
 	return &f
 }
 
-func occupy(f *Fork) {
-	f.in <- true
-}
+func readInput(f *Fork) {
+	for {
+		message := <-f.in
 
-func unoccupy(f *Fork) {
-	f.in <- false
-}
-
-func activateChannels(f *Fork) {
-	message := <-f.in
-	fmt.Println(message, "hej")
-
-	go activateChannels(f)
+		switch message {
+		case 500: //set in use to true
+			f.inUse = 500
+			f.out <- f.inUse
+		case 501: //set in use to false
+			f.inUse = 501
+			f.out <- f.inUse
+		case 1:
+			f.timesUsed++
+			f.out <- f.timesUsed
+		default:
+			fmt.Println("Unknown")
+		}
+	}
 }
