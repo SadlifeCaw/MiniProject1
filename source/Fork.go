@@ -18,14 +18,17 @@ func newFork(init int) *fork {
 	in := make(chan int)
 	out := make(chan int)
 
-	f := fork{id: init, inUse: 0, timesUsed: 0, in: in, out: out}
-
-	go readFork(&f)
+	f := fork{id: init,
+		inUse:     0,
+		timesUsed: 0,
+		in:        in,
+		out:       out,
+	}
 
 	return &f
 }
 
-func readFork(f *fork) {
+func activateForkChannels(f *fork) {
 	for {
 		message := <-f.in
 
